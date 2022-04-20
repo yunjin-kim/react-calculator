@@ -1,5 +1,8 @@
 import "./App.css";
+import DigitComponent from "./Components/DigitComponent";
 import React, { Component, createRef } from "react";
+import OperationComponent from "./Components/OperationComponent";
+import AllClearComponent from "./Components/AllClearComponent";
 
 window.onbeforeunload = () => {
   return 0;
@@ -17,88 +20,6 @@ export default class App extends Component {
 
     this.calculateScreenElement = createRef();
   }
-
-  handleDigitButton = ({ target }) => {
-    if (
-      String(this.state.firstNumber).length > 9 &&
-      this.state.operation === ""
-    ) {
-      return;
-    }
-
-    if (String(this.state.secondNumber).length > 9) {
-      return;
-    }
-
-    if (this.state.operation) {
-      const prevNumber = this.state.secondNumber;
-
-      this.setState({
-        secondNumber: Number(prevNumber + target.textContent),
-      });
-
-      return;
-    }
-
-    const prevNumber = this.state.firstNumber;
-
-    this.setState({
-      firstNumber: !isNaN(prevNumber)
-        ? Number(prevNumber + target.textContent)
-        : target.textContent,
-    });
-  };
-
-  handleOperationButton = ({ target }) => {
-    if (target.textContent === "=" && this.state.secondNumber !== "") {
-      const resultNumber = this.calculateResultNumber();
-
-      if (String(resultNumber).length > 10) {
-        this.setState({
-          firstNumber: Number.isFinite(resultNumber)
-            ? resultNumber.toExponential(3)
-            : "오류",
-          operation: "",
-          secondNumber: "",
-        });
-
-        return;
-      }
-
-      this.setState({
-        firstNumber: Number.isFinite(resultNumber) ? resultNumber : "오류",
-        operation: "",
-        secondNumber: "",
-      });
-
-      return;
-    }
-
-    this.setState({
-      operation: target.textContent,
-    });
-  };
-
-  handleAllClear = () => {
-    this.setState({
-      firstNumber: 0,
-      operation: "",
-      secondNumber: "",
-    });
-  };
-
-  calculateResultNumber = () => {
-    const firstNumber = Number(this.state.firstNumber);
-    const secondNumber = Number(this.state.secondNumber);
-    const calculateMethod = {
-      X: firstNumber * secondNumber,
-      "/": firstNumber / secondNumber,
-      "+": firstNumber + secondNumber,
-      "-": firstNumber - secondNumber,
-    };
-
-    return calculateMethod[this.state.operation] || firstNumber;
-  };
 
   convertToLocaleString = (number) => number.toLocaleString("ko-KR");
 
@@ -126,71 +47,22 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="app">
-        <div className="calculator">
-          <h1 className="total" ref={this.calculateScreenElement}>
-            0
-          </h1>
-          <div className="digits flex" onClick={this.handleDigitButton}>
-            <button className="digit">9</button>
-            <button className="digit">8</button>
-            <button className="digit">7</button>
-            <button className="digit">6</button>
-            <button className="digit">5</button>
-            <button className="digit">4</button>
-            <button className="digit">3</button>
-            <button className="digit">2</button>
-            <button className="digit">1</button>
-            <button className="digit">0</button>
-          </div>
-          <div className="modifiers subgrid">
-            <button className="modifier" onClick={this.handleAllClear}>
-              AC
-            </button>
-          </div>
-          <div
-            className="operations subgrid"
-            onClick={this.handleOperationButton}
-          >
-            <button
-              className={
-                this.state.operation === "/"
-                  ? "operation--focused"
-                  : "operation"
-              }
-            >
-              /
-            </button>
-            <button
-              className={
-                this.state.operation === "X"
-                  ? "operation--focused"
-                  : "operation"
-              }
-            >
-              X
-            </button>
-            <button
-              className={
-                this.state.operation === "-"
-                  ? "operation--focused"
-                  : "operation"
-              }
-            >
-              -
-            </button>
-            <button
-              className={
-                this.state.operation === "+"
-                  ? "operation--focused"
-                  : "operation"
-              }
-            >
-              +
-            </button>
-            <button className="operation">=</button>
-          </div>
-        </div>
+      <div className="calculator">
+        <h1 className="total" ref={this.calculateScreenElement}>
+          0
+        </h1>
+        <DigitComponent
+          calculateInfo={this.state}
+          setCalculateInfo={this.setState.bind(this)}
+        />
+        <AllClearComponent
+          calculateInfo={this.state}
+          setCalculateInfo={this.setState.bind(this)}
+        />
+        <OperationComponent
+          calculateInfo={this.state}
+          setCalculateInfo={this.setState.bind(this)}
+        />
       </div>
     );
   }
