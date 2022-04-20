@@ -20,9 +20,13 @@ export default class App extends Component {
 
   handleDigitButton = ({ target }) => {
     if (
-      this.calculateScreenElement.current.textContent.length > 11 &&
+      String(this.state.firstNumber).length > 9 &&
       this.state.operation === ""
     ) {
+      return;
+    }
+
+    if (String(this.state.secondNumber).length > 9) {
       return;
     }
 
@@ -105,7 +109,6 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
     const calculateScreenElement = this.calculateScreenElement.current;
 
     calculateScreenElement.textContent = this.convertToLocaleString(
