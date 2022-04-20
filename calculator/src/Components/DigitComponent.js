@@ -1,15 +1,21 @@
 import React, { Component } from "react";
 
+import { SCREEN } from "../constant";
+
 export default class DigitComponent extends Component {
   handleDigitButton = ({ target }) => {
     if (
-      String(this.props.calculateInfo.firstNumber).length > 9 &&
+      String(this.props.calculateInfo.firstNumber).length >=
+        SCREEN.MAX_TEXT_LENGTH &&
       this.props.calculateInfo.operation === ""
     ) {
       return;
     }
 
-    if (String(this.props.calculateInfo.secondNumber).length > 9) {
+    if (
+      String(this.props.calculateInfo.secondNumber).length >=
+      SCREEN.MAX_TEXT_LENGTH
+    ) {
       return;
     }
 

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { EXPONENTIAL_LIMIT_POINT, SCREEN } from "../constant";
+
 export default class OperationComponent extends Component {
   calculateResultNumber = () => {
     const firstNumber = Number(this.props.calculateInfo.firstNumber);
@@ -21,11 +23,11 @@ export default class OperationComponent extends Component {
     ) {
       const resultNumber = this.calculateResultNumber();
 
-      if (String(resultNumber).length > 10) {
+      if (String(resultNumber).length > SCREEN.MAX_TEXT_LENGTH) {
         this.props.setCalculateInfo({
           firstNumber: Number.isFinite(resultNumber)
-            ? resultNumber.toExponential(3)
-            : "오류",
+            ? resultNumber.toExponential(EXPONENTIAL_LIMIT_POINT)
+            : SCREEN.ERROR_MESSAGE,
           operation: "",
           secondNumber: "",
         });
@@ -34,7 +36,9 @@ export default class OperationComponent extends Component {
       }
 
       this.props.setCalculateInfo({
-        firstNumber: Number.isFinite(resultNumber) ? resultNumber : "오류",
+        firstNumber: Number.isFinite(resultNumber)
+          ? resultNumber
+          : SCREEN.ERROR_MESSAGE,
         operation: "",
         secondNumber: "",
       });

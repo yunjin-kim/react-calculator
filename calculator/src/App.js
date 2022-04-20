@@ -1,8 +1,12 @@
-import "./App.css";
-import DigitComponent from "./Components/DigitComponent";
 import React, { Component, createRef } from "react";
+
+import "./App.css";
+
+import DigitComponent from "./Components/DigitComponent";
 import OperationComponent from "./Components/OperationComponent";
 import AllClearComponent from "./Components/AllClearComponent";
+
+import { SCREEN } from "./constant";
 
 window.onbeforeunload = () => {
   return 0;
@@ -38,7 +42,7 @@ export default class App extends Component {
         : this.state.secondNumber
     );
 
-    calculateScreenElement.textContent.length > 7
+    calculateScreenElement.textContent.length > SCREEN.FONT_SIZE_SCALE_STANDARD
       ? (calculateScreenElement.style.fontSize = "3rem")
       : (calculateScreenElement.style.fontSize = "4rem");
 
