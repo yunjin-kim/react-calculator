@@ -149,10 +149,42 @@ export default class App extends Component {
             className="operations subgrid"
             onClick={this.handleOperationButton}
           >
-            <button className="operation">/</button>
-            <button className="operation">X</button>
-            <button className="operation">-</button>
-            <button className="operation">+</button>
+            <button
+              className={
+                this.state.operation === "/"
+                  ? "operation--focused"
+                  : "operation"
+              }
+            >
+              /
+            </button>
+            <button
+              className={
+                this.state.operation === "X"
+                  ? "operation--focused"
+                  : "operation"
+              }
+            >
+              X
+            </button>
+            <button
+              className={
+                this.state.operation === "-"
+                  ? "operation--focused"
+                  : "operation"
+              }
+            >
+              -
+            </button>
+            <button
+              className={
+                this.state.operation === "+"
+                  ? "operation--focused"
+                  : "operation"
+              }
+            >
+              +
+            </button>
             <button className="operation">=</button>
           </div>
         </div>

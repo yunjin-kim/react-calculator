@@ -29,6 +29,11 @@ button {
   background-color: #ccc;
 }
 
+.operation--focused {
+  opacity: 0.8;
+  background-color: orange;
+}
+
 .operations button {
   background-color: orange;
 }
