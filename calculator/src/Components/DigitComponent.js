@@ -32,9 +32,9 @@ export default class DigitComponent extends Component {
     const prevNumber = this.props.calculateInfo.firstNumber;
 
     this.props.setCalculateInfo({
-      firstNumber: !isNaN(prevNumber)
-        ? Number(prevNumber + target.textContent)
-        : target.textContent,
+      firstNumber: isNaN(prevNumber)
+        ? target.textContent
+        : Number(prevNumber + target.textContent),
     });
   };
 

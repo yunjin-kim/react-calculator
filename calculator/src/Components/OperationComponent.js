@@ -16,29 +16,33 @@ export default class OperationComponent extends Component {
     return calculateMethod[this.props.calculateInfo.operation] || firstNumber;
   };
 
-  handleOperationButton = ({ target }) => {
+  generateResultNumber(number) {
     if (
-      target.textContent === "=" &&
-      this.props.calculateInfo.secondNumber !== ""
+      String(number).length > SCREEN.MAX_TEXT_LENGTH &&
+      Number.isFinite(number)
     ) {
+      return number.toExponential(EXPONENTIAL_LIMIT_POINT);
+    }
+
+    if (Number.isFinite(number)) {
+      return number;
+    }
+
+    return SCREEN.ERROR_MESSAGE;
+  }
+
+  canCalculate(target) {
+    return (
+      target.textContent === "=" && this.props.calculateInfo.secondNumber !== ""
+    );
+  }
+
+  handleOperationButton = ({ target }) => {
+    if (this.canCalculate(target)) {
       const resultNumber = this.calculateResultNumber();
 
-      if (String(resultNumber).length > SCREEN.MAX_TEXT_LENGTH) {
-        this.props.setCalculateInfo({
-          firstNumber: Number.isFinite(resultNumber)
-            ? resultNumber.toExponential(EXPONENTIAL_LIMIT_POINT)
-            : SCREEN.ERROR_MESSAGE,
-          operation: "",
-          secondNumber: "",
-        });
-
-        return;
-      }
-
       this.props.setCalculateInfo({
-        firstNumber: Number.isFinite(resultNumber)
-          ? resultNumber
-          : SCREEN.ERROR_MESSAGE,
+        firstNumber: this.generateResultNumber(resultNumber),
         operation: "",
         secondNumber: "",
       });
