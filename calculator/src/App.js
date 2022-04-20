@@ -36,7 +36,6 @@ export default class App extends Component {
   handleOperationButton = ({ target }) => {
     if (target.textContent === "=" && this.state.secondNumber !== "") {
       const resultNumber = this.calculateResultNumber();
-      console.log(resultNumber);
 
       this.setState({
         firstNumber: Number.isFinite(Number(resultNumber))
@@ -78,8 +77,12 @@ export default class App extends Component {
 
   convertToLocaleString = (number) => number.toLocaleString("ko-KR");
 
+  componentDidMount() {
+    const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo"));
+    this.setState(calculateInfo);
+  }
+
   componentDidUpdate() {
-    console.log(this.state);
     const calculateScreenElement = this.calculateScreenElement.current;
 
     if (this.state.secondNumber === "") {
@@ -87,12 +90,15 @@ export default class App extends Component {
         this.state.firstNumber
       );
 
+      localStorage.setItem("calculateInfo", JSON.stringify(this.state));
+
       return;
     }
 
     calculateScreenElement.textContent = this.convertToLocaleString(
       this.state.secondNumber
     );
+    localStorage.setItem("calculateInfo", JSON.stringify(this.state));
   }
 
   render() {
