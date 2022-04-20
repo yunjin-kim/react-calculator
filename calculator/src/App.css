@@ -38,6 +38,7 @@ button {
 }
 
 .total {
+  height: 73.5px;
   grid-area: total;
   background-color: #333;
   color: white;

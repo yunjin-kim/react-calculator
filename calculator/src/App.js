@@ -15,8 +15,16 @@ export default class App extends Component {
   }
 
   handleDigitButton = ({ target }) => {
+    if (
+      this.calculateScreenElement.current.textContent.length > 11 &&
+      this.state.operation === ""
+    ) {
+      return;
+    }
+
     if (this.state.operation) {
       const prevNumber = this.state.secondNumber;
+
       this.setState({
         secondNumber: Number(prevNumber + target.textContent),
       });
@@ -37,10 +45,20 @@ export default class App extends Component {
     if (target.textContent === "=" && this.state.secondNumber !== "") {
       const resultNumber = this.calculateResultNumber();
 
+      if (String(resultNumber).length > 10) {
+        this.setState({
+          firstNumber: Number.isFinite(resultNumber)
+            ? resultNumber.toExponential(3)
+            : "오류",
+          operation: "",
+          secondNumber: "",
+        });
+
+        return;
+      }
+
       this.setState({
-        firstNumber: Number.isFinite(Number(resultNumber))
-          ? Number(resultNumber)
-          : "오류",
+        firstNumber: Number.isFinite(resultNumber) ? resultNumber : "오류",
         operation: "",
         secondNumber: "",
       });
@@ -64,7 +82,6 @@ export default class App extends Component {
   calculateResultNumber = () => {
     const firstNumber = Number(this.state.firstNumber);
     const secondNumber = Number(this.state.secondNumber);
-
     const calculateMethod = {
       X: firstNumber * secondNumber,
       "/": firstNumber / secondNumber,
@@ -79,25 +96,24 @@ export default class App extends Component {
 
   componentDidMount() {
     const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo"));
+
     this.setState(calculateInfo);
   }
 
   componentDidUpdate() {
+    console.log(this.state);
     const calculateScreenElement = this.calculateScreenElement.current;
 
-    if (this.state.secondNumber === "") {
-      calculateScreenElement.textContent = this.convertToLocaleString(
-        this.state.firstNumber
-      );
-
-      localStorage.setItem("calculateInfo", JSON.stringify(this.state));
-
-      return;
-    }
-
     calculateScreenElement.textContent = this.convertToLocaleString(
-      this.state.secondNumber
+      this.state.secondNumber === ""
+        ? this.state.firstNumber
+        : this.state.secondNumber
     );
+
+    calculateScreenElement.textContent.length > 7
+      ? (calculateScreenElement.style.fontSize = "3rem")
+      : (calculateScreenElement.style.fontSize = "4rem");
+
     localStorage.setItem("calculateInfo", JSON.stringify(this.state));
   }
 
