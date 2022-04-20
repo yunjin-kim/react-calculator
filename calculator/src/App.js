@@ -1,6 +1,10 @@
 import "./App.css";
 import React, { Component, createRef } from "react";
 
+window.onbeforeunload = () => {
+  return 0;
+};
+
 export default class App extends Component {
   constructor() {
     super();
