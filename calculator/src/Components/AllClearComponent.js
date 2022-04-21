@@ -1,21 +1,23 @@
-import React, { Component } from "react";
+import React from 'react'
 
-export default class AllClearComponent extends Component {
-  handleAllClear = () => {
-    this.props.setCalculateInfo({
+const AllClearComponent = ({ setCalculateInfo }) => {
+  const handleAllClear = () => {
+    setCalculateInfo({
       firstNumber: 0,
       operation: "",
       secondNumber: "",
     });
   };
 
-  render() {
-    return (
+  return (
+    <>
       <div className="modifiers subgrid">
-        <button className="modifier" onClick={this.handleAllClear}>
+        <button className="modifier" onClick={handleAllClear}>
           AC
         </button>
       </div>
-    );
-  }
+    </>
+  )
 }
+
+export default AllClearComponent

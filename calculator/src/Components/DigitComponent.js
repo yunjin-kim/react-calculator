@@ -1,46 +1,42 @@
-import React, { Component } from "react";
-
+import React from "react";
 import { SCREEN } from "../constant";
 
-export default class DigitComponent extends Component {
-  handleDigitButton = ({ target }) => {
+const DigitComponent = ({ calculateInfo, setCalculateInfo }) => {
+  const handleDigitButton = ({ target }) => {
     if (
-      String(this.props.calculateInfo.firstNumber).length >=
+      String(calculateInfo.firstNumber).length >=
         SCREEN.MAX_TEXT_LENGTH &&
-      this.props.calculateInfo.operation === ""
+      calculateInfo.operation === ""
     ) {
       return;
     }
 
     if (
-      String(this.props.calculateInfo.secondNumber).length >=
+      String(calculateInfo.secondNumber).length >=
       SCREEN.MAX_TEXT_LENGTH
     ) {
       return;
     }
 
-    if (this.props.calculateInfo.operation) {
-      const prevNumber = this.props.calculateInfo.secondNumber;
+    if (calculateInfo.operation) {
+      const prevNumber = calculateInfo.secondNumber;
 
-      this.props.setCalculateInfo({
-        secondNumber: Number(prevNumber + target.textContent),
-      });
+      setCalculateInfo({ ...calculateInfo, secondNumber: Number(prevNumber + target.textContent) });
 
       return;
     }
 
-    const prevNumber = this.props.calculateInfo.firstNumber;
-
-    this.props.setCalculateInfo({
-      firstNumber: isNaN(prevNumber)
+    const prevNumber = calculateInfo.firstNumber;
+    const editFirstNumber = isNaN(prevNumber)
         ? target.textContent
-        : Number(prevNumber + target.textContent),
-    });
-  };
+        : Number(prevNumber + target.textContent);
 
-  render() {
-    return (
-      <div className="digits flex" onClick={this.handleDigitButton}>
+    setCalculateInfo({ ...calculateInfo, firstNumber: editFirstNumber });
+  }
+
+  return (
+    <>
+      <div className="digits flex" onClick={handleDigitButton}>
         <button className="digit">9</button>
         <button className="digit">8</button>
         <button className="digit">7</button>
@@ -52,6 +48,8 @@ export default class DigitComponent extends Component {
         <button className="digit">1</button>
         <button className="digit">0</button>
       </div>
-    );
-  }
+    </>
+  )
 }
+
+export default DigitComponent;

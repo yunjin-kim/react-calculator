@@ -1,73 +1,69 @@
-import React, { Component, createRef } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-
 import DigitComponent from "./Components/DigitComponent";
 import OperationComponent from "./Components/OperationComponent";
 import AllClearComponent from "./Components/AllClearComponent";
-
 import { SCREEN } from "./constant";
 
 window.onbeforeunload = () => {
   return 0;
 };
 
-export default class App extends Component {
-  constructor() {
-    super();
+const App = () => {
+  const [calculateInfo, setCalculateInfo] = useState({
+    firstNumber: 0,
+    secondNumber: "",
+    operation: "",
+  });
+  const calculateScreenElement = useRef();
 
-    this.state = {
+  const convertToLocaleString = (number) => number.toLocaleString("ko-KR");
+
+  useEffect(() => {
+    const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo")) || {
       firstNumber: 0,
-      operation: "",
       secondNumber: "",
+      operation: "",
     };
 
-    this.calculateScreenElement = createRef();
-  }
+    setCalculateInfo(calculateInfo);
+  }, []);
 
-  convertToLocaleString = (number) => number.toLocaleString("ko-KR");
 
-  componentDidMount() {
-    const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo"));
+  useEffect(() => {
+    calculateScreenElement.current.textContent = convertToLocaleString(
+      calculateInfo.secondNumber === ""
+        ? calculateInfo.firstNumber
+        : calculateInfo.secondNumber);
 
-    this.setState(calculateInfo);
-  }
 
-  componentDidUpdate() {
-    const calculateScreenElement = this.calculateScreenElement.current;
+    calculateScreenElement.current.textContent.length > SCREEN.FONT_SIZE_SCALE_STANDARD
+      ? (calculateScreenElement.current.style.fontSize = "3rem")
+      : (calculateScreenElement.current.style.fontSize = "4rem");
 
-    calculateScreenElement.textContent = this.convertToLocaleString(
-      this.state.secondNumber === ""
-        ? this.state.firstNumber
-        : this.state.secondNumber
-    );
+    localStorage.setItem("calculateInfo", JSON.stringify(calculateInfo));
+  }, [calculateInfo]);
 
-    calculateScreenElement.textContent.length > SCREEN.FONT_SIZE_SCALE_STANDARD
-      ? (calculateScreenElement.style.fontSize = "3rem")
-      : (calculateScreenElement.style.fontSize = "4rem");
-
-    localStorage.setItem("calculateInfo", JSON.stringify(this.state));
-  }
-
-  render() {
-    return (
+  return (
+    <>
       <div className="calculator">
-        <h1 className="total" ref={this.calculateScreenElement}>
+        <h1 className="total" ref={calculateScreenElement}>
           0
         </h1>
         <DigitComponent
-          calculateInfo={this.state}
-          setCalculateInfo={this.setState.bind(this)}
+          calculateInfo={calculateInfo}
+          setCalculateInfo={setCalculateInfo}
         />
         <AllClearComponent
-          calculateInfo={this.state}
-          setCalculateInfo={this.setState.bind(this)}
+          setCalculateInfo={setCalculateInfo}
         />
         <OperationComponent
-          calculateInfo={this.state}
-          setCalculateInfo={this.setState.bind(this)}
+          calculateInfo={calculateInfo}
+          setCalculateInfo={setCalculateInfo}
         />
       </div>
-    );
-  }
+    </>
+  )
 }
+
+export default App;

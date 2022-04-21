@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-
+import React, { useCallback } from "react";
 import { EXPONENTIAL_LIMIT_POINT, SCREEN } from "../constant";
 
-export default class OperationComponent extends Component {
-  calculateResultNumber = () => {
-    const firstNumber = Number(this.props.calculateInfo.firstNumber);
-    const secondNumber = Number(this.props.calculateInfo.secondNumber);
+const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
+  const calculateResultNumber = () => {
+    const firstNumber = Number(calculateInfo.firstNumber);
+    const secondNumber = Number(calculateInfo.secondNumber);
     const calculateMethod = {
       X: firstNumber * secondNumber,
       "/": firstNumber / secondNumber,
@@ -13,13 +12,12 @@ export default class OperationComponent extends Component {
       "-": firstNumber - secondNumber,
     };
 
-    return calculateMethod[this.props.calculateInfo.operation] || firstNumber;
+    return calculateMethod[calculateInfo.operation] || firstNumber;
   };
 
-  generateResultNumber(number) {
+  const generateResultNumber = (number) => {
     if (
-      String(number).length > SCREEN.MAX_TEXT_LENGTH &&
-      Number.isFinite(number)
+      String(number).length > SCREEN.MAX_TEXT_LENGTH
     ) {
       return number.toExponential(EXPONENTIAL_LIMIT_POINT);
     }
@@ -31,36 +29,38 @@ export default class OperationComponent extends Component {
     return SCREEN.ERROR_MESSAGE;
   }
 
-  canCalculate(target) {
+  const canCalculate = (target) => {
     return (
-      target.textContent === "=" && this.props.calculateInfo.secondNumber !== ""
+      target.textContent === "=" && calculateInfo.secondNumber !== ""
     );
   }
 
-  handleOperationButton = ({ target }) => {
-    if (this.canCalculate(target)) {
-      const resultNumber = this.calculateResultNumber();
+  const handleOperationButton = ({ target }) => {
+    if (target.textContent === calculateInfo.operation) {
+      return;
+    }
 
-      this.props.setCalculateInfo({
-        firstNumber: this.generateResultNumber(resultNumber),
-        operation: "",
+    if (canCalculate(target)) {
+      const resultNumber = calculateResultNumber();
+
+      setCalculateInfo({
+        firstNumber: generateResultNumber(resultNumber),
         secondNumber: "",
-      });
+        operation: "",
+      })
 
       return;
     }
 
-    this.props.setCalculateInfo({
-      operation: target.textContent,
-    });
+    setCalculateInfo({ ...calculateInfo, operation: target.textContent })
   };
 
-  render() {
-    return (
-      <div className="operations subgrid" onClick={this.handleOperationButton}>
+  return (
+    <>
+      <div className="operations subgrid" onClick={handleOperationButton}>
         <button
           className={
-            this.props.calculateInfo.operation === "/"
+            calculateInfo.operation === "/"
               ? "operation--focused"
               : "operation"
           }
@@ -69,7 +69,7 @@ export default class OperationComponent extends Component {
         </button>
         <button
           className={
-            this.props.calculateInfo.operation === "X"
+            calculateInfo.operation === "X"
               ? "operation--focused"
               : "operation"
           }
@@ -78,7 +78,7 @@ export default class OperationComponent extends Component {
         </button>
         <button
           className={
-            this.props.calculateInfo.operation === "-"
+            calculateInfo.operation === "-"
               ? "operation--focused"
               : "operation"
           }
@@ -87,7 +87,7 @@ export default class OperationComponent extends Component {
         </button>
         <button
           className={
-            this.props.calculateInfo.operation === "+"
+            calculateInfo.operation === "+"
               ? "operation--focused"
               : "operation"
           }
@@ -96,6 +96,8 @@ export default class OperationComponent extends Component {
         </button>
         <button className="operation">=</button>
       </div>
-    );
-  }
+    </>
+  )
 }
+
+export default OperationComponent;
