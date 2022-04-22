@@ -1,4 +1,3 @@
-import React, { useCallback } from "react";
 import { EXPONENTIAL_LIMIT_POINT, SCREEN } from "../constant";
 
 const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
@@ -11,7 +10,7 @@ const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
       "+": firstNumber + secondNumber,
       "-": firstNumber - secondNumber,
     };
-
+    
     return calculateMethod[calculateInfo.operation] || firstNumber;
   };
 

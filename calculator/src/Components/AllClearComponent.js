@@ -1,5 +1,3 @@
-import React from 'react'
-
 const AllClearComponent = ({ setCalculateInfo }) => {
   const handleAllClear = () => {
     setCalculateInfo({

@@ -1,4 +1,3 @@
-import React from "react";
 import { SCREEN } from "../constant";
 
 const DigitComponent = ({ calculateInfo, setCalculateInfo }) => {

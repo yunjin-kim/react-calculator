@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import DigitComponent from "./Components/DigitComponent";
 import OperationComponent from "./Components/OperationComponent";
