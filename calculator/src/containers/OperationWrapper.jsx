@@ -1,6 +1,9 @@
+import React from 'react'
+import OperationComponent from '../components/OperationComponent';
 import { EXPONENTIAL_LIMIT_POINT, SCREEN } from "../constant";
 
-const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
+
+const OperationWrapper = ({ calculateInfo, setCalculateInfo }) => {
   const calculateResultNumber = () => {
     const firstNumber = Number(calculateInfo.firstNumber);
     const secondNumber = Number(calculateInfo.secondNumber);
@@ -11,7 +14,7 @@ const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
       "-": firstNumber - secondNumber,
     };
     
-    return calculateMethod[calculateInfo.operation] || firstNumber;
+    return calculateMethod[calculateInfo.operation] ?? firstNumber;
   };
 
   const generateResultNumber = (number) => {
@@ -33,6 +36,7 @@ const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
       target.textContent === "=" && calculateInfo.secondNumber !== ""
     );
   }
+
 
   const handleOperationButton = ({ target }) => {
     if (target.textContent === calculateInfo.operation) {
@@ -56,47 +60,12 @@ const OperationComponent = ({ calculateInfo, setCalculateInfo }) => {
 
   return (
     <>
-      <div className="operations subgrid" onClick={handleOperationButton}>
-        <button
-          className={
-            calculateInfo.operation === "/"
-              ? "operation--focused"
-              : "operation"
-          }
-        >
-          /
-        </button>
-        <button
-          className={
-            calculateInfo.operation === "X"
-              ? "operation--focused"
-              : "operation"
-          }
-        >
-          X
-        </button>
-        <button
-          className={
-            calculateInfo.operation === "-"
-              ? "operation--focused"
-              : "operation"
-          }
-        >
-          -
-        </button>
-        <button
-          className={
-            calculateInfo.operation === "+"
-              ? "operation--focused"
-              : "operation"
-          }
-        >
-          +
-        </button>
-        <button className="operation">=</button>
-      </div>
+      <OperationComponent 
+        calculateInfo={calculateInfo}
+        handleOperationButton={handleOperationButton} 
+      />
     </>
   )
 }
 
-export default OperationComponent;
+export default OperationWrapper

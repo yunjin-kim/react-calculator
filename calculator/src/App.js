@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
-import DigitComponent from "./Components/DigitComponent";
-import OperationComponent from "./Components/OperationComponent";
-import AllClearComponent from "./Components/AllClearComponent";
 import { SCREEN } from "./constant";
+import AllClearWrapper from "./containers/AllClearWrapper";
+import DigitWrapper from "./containers/DigitWrapper";
+import OperationWrapper from "./containers/OperationWrapper";
 
-window.onbeforeunload = () => {
-  return 0;
+
+const handleBeforeunload = (event) => {
+  event.preventDefault();
+  event.returnValue = "";
 };
 
 const App = () => {
@@ -15,11 +17,14 @@ const App = () => {
     secondNumber: "",
     operation: "",
   });
+  const [screenFont, setScreenFont] = useState("bigFont");
   const calculateScreenElement = useRef();
 
   const convertToLocaleString = (number) => number.toLocaleString("ko-KR");
 
   useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeunload);
+
     const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo")) || {
       firstNumber: 0,
       secondNumber: "",
@@ -27,19 +32,16 @@ const App = () => {
     };
 
     setCalculateInfo(calculateInfo);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeunload)
+    }
   }, []);
 
-
   useEffect(() => {
-    calculateScreenElement.current.textContent = convertToLocaleString(
-      calculateInfo.secondNumber === ""
-        ? calculateInfo.firstNumber
-        : calculateInfo.secondNumber);
-
-
     calculateScreenElement.current.textContent.length > SCREEN.FONT_SIZE_SCALE_STANDARD
-      ? (calculateScreenElement.current.style.fontSize = "3rem")
-      : (calculateScreenElement.current.style.fontSize = "4rem");
+      ? setScreenFont("smallFont")
+      : setScreenFont("bigFont");
 
     localStorage.setItem("calculateInfo", JSON.stringify(calculateInfo));
   }, [calculateInfo]);
@@ -47,17 +49,17 @@ const App = () => {
   return (
     <>
       <div className="calculator">
-        <h1 className="total" ref={calculateScreenElement}>
-          0
+        <h1 className={`total ${screenFont === "bigFont" ? "bigFont" : "smallFont"} `} ref={calculateScreenElement}>
+          {convertToLocaleString(calculateInfo.secondNumber || calculateInfo.firstNumber)}
         </h1>
-        <DigitComponent
+        <DigitWrapper
           calculateInfo={calculateInfo}
           setCalculateInfo={setCalculateInfo}
         />
-        <AllClearComponent
+        <AllClearWrapper
           setCalculateInfo={setCalculateInfo}
         />
-        <OperationComponent
+        <OperationWrapper
           calculateInfo={calculateInfo}
           setCalculateInfo={setCalculateInfo}
         />

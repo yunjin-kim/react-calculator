@@ -1,12 +1,4 @@
-const AllClearComponent = ({ setCalculateInfo }) => {
-  const handleAllClear = () => {
-    setCalculateInfo({
-      firstNumber: 0,
-      operation: "",
-      secondNumber: "",
-    });
-  };
-
+const AllClearComponent = ({ handleAllClear }) => {
   return (
     <>
       <div className="modifiers subgrid">

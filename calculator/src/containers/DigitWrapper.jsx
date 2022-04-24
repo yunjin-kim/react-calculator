@@ -1,6 +1,8 @@
+import React from 'react'
+import DigitComponent from '../components/DigitComponent';
 import { SCREEN } from "../constant";
 
-const DigitComponent = ({ calculateInfo, setCalculateInfo }) => {
+const DigitWrapper = ({ calculateInfo, setCalculateInfo }) => {
   const handleDigitButton = ({ target }) => {
     if (
       String(calculateInfo.firstNumber).length >=
@@ -35,20 +37,11 @@ const DigitComponent = ({ calculateInfo, setCalculateInfo }) => {
 
   return (
     <>
-      <div className="digits flex" onClick={handleDigitButton}>
-        <button className="digit">9</button>
-        <button className="digit">8</button>
-        <button className="digit">7</button>
-        <button className="digit">6</button>
-        <button className="digit">5</button>
-        <button className="digit">4</button>
-        <button className="digit">3</button>
-        <button className="digit">2</button>
-        <button className="digit">1</button>
-        <button className="digit">0</button>
-      </div>
+      <DigitComponent
+        handleDigitButton={handleDigitButton}
+      />
     </>
   )
 }
 
-export default DigitComponent;
+export default DigitWrapper
