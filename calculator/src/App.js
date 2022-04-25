@@ -5,18 +5,19 @@ import AllClearWrapper from "./containers/AllClearWrapper";
 import DigitWrapper from "./containers/DigitWrapper";
 import OperationWrapper from "./containers/OperationWrapper";
 
-
 const handleBeforeunload = (event) => {
   event.preventDefault();
   event.returnValue = "";
 };
 
+const initCalculateInfo = {
+  firstNumber: 0,
+  secondNumber: "",
+  operation: "",
+}
+
 const App = () => {
-  const [calculateInfo, setCalculateInfo] = useState({
-    firstNumber: 0,
-    secondNumber: "",
-    operation: "",
-  });
+  const [calculateInfo, setCalculateInfo] = useState(initCalculateInfo);
   const [screenFont, setScreenFont] = useState("bigFont");
   const calculateScreenElement = useRef();
 
@@ -25,16 +26,12 @@ const App = () => {
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeunload);
 
-    const calculateInfo = JSON.parse(localStorage.getItem("calculateInfo")) || {
-      firstNumber: 0,
-      secondNumber: "",
-      operation: "",
-    };
+    const localCalculateInfo = JSON.parse(localStorage.getItem("calculateInfo"));
 
-    setCalculateInfo(calculateInfo);
+    setCalculateInfo(localCalculateInfo);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeunload)
+      window.removeEventListener("beforeunload", handleBeforeunload);
     }
   }, []);
 
@@ -43,7 +40,14 @@ const App = () => {
       ? setScreenFont("smallFont")
       : setScreenFont("bigFont");
 
-    localStorage.setItem("calculateInfo", JSON.stringify(calculateInfo));
+    const handleUnload = () => {
+      localStorage.setItem("calculateInfo", JSON.stringify(calculateInfo));  
+    }
+    window.addEventListener("unload", handleUnload);
+
+    return () => {
+      window.removeEventListener("unload", handleUnload);
+    }
   }, [calculateInfo]);
 
   return (
