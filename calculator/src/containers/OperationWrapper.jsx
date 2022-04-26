@@ -8,7 +8,7 @@ const OperationWrapper = ({ calculateInfo, setCalculateInfo }) => {
     const firstNumber = Number(calculateInfo.firstNumber);
     const secondNumber = Number(calculateInfo.secondNumber);
     const calculateMethod = {
-      X: firstNumber * secondNumber,
+      "X": firstNumber * secondNumber,
       "/": firstNumber / secondNumber,
       "+": firstNumber + secondNumber,
       "-": firstNumber - secondNumber,

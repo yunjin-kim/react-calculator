@@ -26,8 +26,8 @@ const App = () => {
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeunload);
 
-    const localCalculateInfo = JSON.parse(localStorage.getItem("calculateInfo"));
-
+    const localCalculateInfo = JSON.parse(localStorage.getItem("calculateInfo")) || initCalculateInfo;
+    console.log(localCalculateInfo);
     setCalculateInfo(localCalculateInfo);
 
     return () => {
@@ -37,8 +37,8 @@ const App = () => {
 
   useEffect(() => {
     calculateScreenElement.current.textContent.length > SCREEN.FONT_SIZE_SCALE_STANDARD
-      ? setScreenFont("smallFont")
-      : setScreenFont("bigFont");
+      ? setScreenFont(SCREEN.SMALL_FONT)
+      : setScreenFont(SCREEN.BIG_FONT);
 
     const handleUnload = () => {
       localStorage.setItem("calculateInfo", JSON.stringify(calculateInfo));  
@@ -53,7 +53,7 @@ const App = () => {
   return (
     <>
       <div className="calculator">
-        <h1 className={`total ${screenFont === "bigFont" ? "bigFont" : "smallFont"} `} ref={calculateScreenElement}>
+        <h1 className={`total ${screenFont === SCREEN.BIG_FONT ? SCREEN.BIG_FONT : SCREEN.SMALL_FONT} `} ref={calculateScreenElement}>
           {convertToLocaleString(calculateInfo.secondNumber || calculateInfo.firstNumber)}
         </h1>
         <DigitWrapper
